@@ -47,7 +47,7 @@ class SensorLessHomingHelper(object):
             yield
         finally:
             curtime = self.printer.get_reactor().monotonic()
-            settings = self.pconfig.self.get_status(curtime)['settings']
+            settings = self.pconfig.get_status(curtime)['settings']
             self.gcode.run_script_from_command(
                 'SET_TMC_CURRENT STEPPER={} CURRENT={}'.format(x_stepper_name, settings[self.tmc_stepper_x_name]['run_current']))
             self.gcode.run_script_from_command(
