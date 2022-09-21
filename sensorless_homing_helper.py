@@ -53,7 +53,7 @@ class SensorLessHomingHelper(object):
             self.gcode.run_script_from_command(
                 'SET_TMC_CURRENT STEPPER={} CURRENT={}'.format(y_stepper_name, settings[self.tmc_stepper_y_name]['run_current']))
 
-    def cmd_HOME_X(self):
+    def cmd_HOME_X(self, gcmd):
         # Check if X axis is homed and its last known position
         curtime = self.printer.get_reactor().monotonic()
         kin_status = self.toolhead.get_kinematics().get_status(curtime)
@@ -69,7 +69,7 @@ class SensorLessHomingHelper(object):
             self.toolhead.manual_move([None, None, -1 * self.minimum_homing_distance],
                                       self.retract_speed)
 
-    def cmd_HOME_Y(self):
+    def cmd_HOME_Y(self, gcmd):
         pass
 
 
