@@ -21,10 +21,10 @@ class SensorLessHomingHelper(object):
         self.retract_speed = config.get('retract_speed', 20)
         self.stallguard_reset_time = config.get('stallguard_reset_time', 1)
 
-        self.gcode.register_command('__HOME_X',
+        self.gcode.register_command('_HOME_X',
                                     self.cmd_HOME_X,
                                     'Sensorless homing X axis')
-        self.gcode.register_command('__HOME_Y',
+        self.gcode.register_command('_HOME_Y',
                                     self.cmd_HOME_Y,
                                     'Sensorless homing X axis')
 
@@ -80,7 +80,30 @@ class SensorLessHomingHelper(object):
             self.toolhead.dwell(self.stallguard_reset_time)
 
     def cmd_HOME_Y(self, gcmd):
-        pass
+        # Check if Y axis is homed and its last known position
+        curtime = self.printer.get_reactor().monotonic()
+        kin_status = self.toolhead.get_kinematics().get_status(curtime)
+
+        pos = self.toolhead.get_position()
+
+        if 'y' not in kin_status['homed_axes']:
+            pos[1] = self.minimum_homing_distance
+            self.toolhead.set_position(pos, homing_axes=[0])
+            self.toolhead.manual_move([None, 0, None],
+                                      self.retract_speed)
+        elif kin_status['axis_maximum'][1] - pos[1] < self.minimum_homing_distance:
+            pos[1] -= self.minimum_homing_distance
+            self.toolhead.manual_move(pos, self.retract_speed)
+
+        with self.set_xy_motor_current(self.home_current):
+            self.gcode.run_script_from_command('G28 Y')
+            self.toolhead.wait_moves()
+
+            # Retract
+            pos = self.toolhead.get_position()
+            pos[1] -= self.retract_distance
+            self.toolhead.move(pos, self.retract_speed)
+            self.toolhead.dwell(self.stallguard_reset_time)
 
 
 def load_config(config):
