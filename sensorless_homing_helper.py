@@ -19,7 +19,7 @@ class SensorLessHomingHelper(object):
         self.minimum_homing_distance = config.get('minimum_homing_distance', 10)
         self.retract_distance = config.get('retract_distance', 10)
         self.retract_speed = config.get('retract_speed', 20)
-        self.stallguard_reset_time = config.get('stallguard_reset_time_ms', 1000)
+        self.stallguard_reset_time = config.get('stallguard_reset_time', 1)
 
         self.gcode.register_command('__HOME_X',
                                     self.cmd_HOME_X,
@@ -68,6 +68,16 @@ class SensorLessHomingHelper(object):
         elif kin_status['axis_maximum'][0] - pos[0] < self.minimum_homing_distance:
             pos[0] -= self.minimum_homing_distance
             self.toolhead.manual_move(pos, self.retract_speed)
+
+        with self.set_xy_motor_current(self.home_current):
+            self.gcode.run_script_from_command('G28 X')
+            self.toolhead.wait_moves()
+
+            # Retract
+            pos = self.toolhead.get_position()
+            pos[0] -= self.retract_distance
+            self.toolhead.move(pos, self.retract_speed)
+            self.toolhead.dwell(self.stallguard_reset_time)
 
     def cmd_HOME_Y(self, gcmd):
         pass
