@@ -12,9 +12,7 @@ class SensorLessHomingHelper(object):
         self.tmc_stepper_y_name = config.get('tmc_stepper_y_name')
         self.tmc_stepper_x_name = config.get('tmc_stepper_x_name')
 
-        pconfig = self.printer.lookup_object("configfile")
-        self.stepper_y_run_current = float(pconfig.status_settings[self.tmc_stepper_y_name].run_current)
-        self.stepper_x_run_current = float(pconfig.status_settings[self.tmc_stepper_x_name].run_current)
+        self.pconfig = self.printer.lookup_object("configfile")
 
         # Read config
         self.home_current = config.get('home_current')
@@ -48,10 +46,12 @@ class SensorLessHomingHelper(object):
         try:
             yield
         finally:
+            curtime = self.printer.get_reactor().monotonic()
+            settings = self.pconfig.self.get_status(curtime)['settings']
             self.gcode.run_script_from_command(
-                'SET_TMC_CURRENT STEPPER={} CURRENT={}'.format(x_stepper_name, self.stepper_x_run_current))
+                'SET_TMC_CURRENT STEPPER={} CURRENT={}'.format(x_stepper_name, settings[self.tmc_stepper_x_name]['run_current']))
             self.gcode.run_script_from_command(
-                'SET_TMC_CURRENT STEPPER={} CURRENT={}'.format(y_stepper_name, self.stepper_y_run_current))
+                'SET_TMC_CURRENT STEPPER={} CURRENT={}'.format(y_stepper_name, settings[self.tmc_stepper_y_name]['run_current']))
 
     def cmd_HOME_X(self):
         # Check if X axis is homed and its last known position
