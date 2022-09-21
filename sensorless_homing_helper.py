@@ -61,13 +61,13 @@ class SensorLessHomingHelper(object):
         pos = self.toolhead.get_position()
 
         if 'x' not in kin_status['homed_axes']:
-            pos[0] = 0
+            pos[0] = self.minimum_homing_distance
             self.toolhead.set_position(pos, homing_axes=[0])
-            self.toolhead.manual_move([-1 * self.minimum_homing_distance, None, None],
+            self.toolhead.manual_move([0, None, None],
                                       self.retract_speed)
         elif kin_status['axis_maximum']['x'] - pos[0] < self.minimum_homing_distance:
-            self.toolhead.manual_move([-1 * self.minimum_homing_distance, None, None],
-                                      self.retract_speed)
+            pos[0] -= self.minimum_homing_distance
+            self.toolhead.manual_move(pos, self.retract_speed)
 
     def cmd_HOME_Y(self, gcmd):
         pass
