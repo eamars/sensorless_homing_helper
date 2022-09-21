@@ -16,7 +16,7 @@ class SensorLessHomingHelper(object):
 
         # Read config
         self.home_current = config.get('home_current')
-        self.minimum_homing_distance = config.get('minimum_homing_distance', 5)
+        self.minimum_homing_distance = config.get('minimum_homing_distance', 10)
         self.retract_distance = config.get('retract_distance', 10)
         self.retract_speed = config.get('retract_speed', 20)
         self.stallguard_reset_time = config.get('stallguard_reset_time_ms', 1000)
@@ -65,7 +65,7 @@ class SensorLessHomingHelper(object):
             self.toolhead.set_position(pos, homing_axes=[0])
             self.toolhead.manual_move([0, None, None],
                                       self.retract_speed)
-        elif kin_status['axis_maximum']['x'] - pos[0] < self.minimum_homing_distance:
+        elif kin_status['axis_maximum'][0] - pos[0] < self.minimum_homing_distance:
             pos[0] -= self.minimum_homing_distance
             self.toolhead.manual_move(pos, self.retract_speed)
 
