@@ -63,9 +63,9 @@ class SensorLessHomingHelper(object):
         if 'x' not in kin_status['homed_axes']:
             # Run the sensorless homing to the opposite direction
             with self.set_xy_motor_current(self.home_current):
-                move_pos = pos.copy()
+                move_pos = pos[:]
                 move_pos[0] = 0
-                current_pos = pos.copy()
+                current_pos = pos[:]
                 current_pos[0] = self.minimum_homing_distance
                 endstops = self.toolhead.get_kinematics().rails[0].get_endstops()
 
