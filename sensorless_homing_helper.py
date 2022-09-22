@@ -15,11 +15,11 @@ class SensorLessHomingHelper(object):
         self.pconfig = self.printer.lookup_object("configfile")
 
         # Read config
-        self.home_current = config.get('home_current')
-        self.minimum_homing_distance = config.get('minimum_homing_distance', 10)
-        self.retract_distance = config.get('retract_distance', 10)
-        self.retract_speed = config.get('retract_speed', 20)
-        self.stallguard_reset_time = config.get('stallguard_reset_time', 1)
+        self.home_current = config.getfloat('home_current')
+        self.minimum_homing_distance = config.getfloat('minimum_homing_distance', 10)
+        self.retract_distance = config.getfloat('retract_distance', 10)
+        self.retract_speed = config.getfloat('retract_speed', 20)
+        self.stallguard_reset_time = config.getfloat('stallguard_reset_time', 1)
 
         self.gcode.register_command('_HOME_X',
                                     self.cmd_HOME_X,
