@@ -21,10 +21,10 @@ class SensorLessHomingHelper(object):
         self.retract_speed = config.get('retract_speed', 20)
         self.stallguard_reset_time = config.get('stallguard_reset_time', 1)
 
-        self.gcode.register_command('_HOME_X',
+        self.gcode.register_command('__HOME_X',
                                     self.cmd_HOME_X,
                                     'Sensorless homing X axis')
-        self.gcode.register_command('_HOME_Y',
+        self.gcode.register_command('__HOME_Y',
                                     self.cmd_HOME_Y,
                                     'Sensorless homing X axis')
 
