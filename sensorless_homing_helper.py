@@ -64,13 +64,16 @@ class SensorLessHomingHelper(object):
             # Run the sensorless homing to the opposite direction
             with self.set_xy_motor_current(self.home_current):
                 pos[0] = -self.minimum_homing_distance
-                phoming = self.printer.lookup_object('homing')
                 endstops = self.toolhead.get_kinematics().rails[0].get_endstops()
-                phoming.manual_home(self, toolhead=self.toolhead,
+
+                # Do a manual homing
+                phoming = self.printer.lookup_object('homing')
+                phoming.manual_home(toolhead=self.toolhead,
                                     endstops=endstops,
                                     pos=pos,
                                     speed=self.retract_speed,
-                                    triggered=True, check_triggered=False)
+                                    triggered=True,
+                                    check_triggered=False)
 
         elif kin_status['axis_maximum'][0] - pos[0] < self.minimum_homing_distance:
             pos[0] -= self.minimum_homing_distance
