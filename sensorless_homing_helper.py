@@ -66,7 +66,7 @@ class SensorLessHomingHelper(object):
                 pos[0] = -self.minimum_homing_distance
                 phoming = self.printer.lookup_object('homing')
                 endstops = self.toolhead.get_kinematics().rails[0].get_endstops()
-                phoming.manual_home(toolhead=self.toolhead,
+                phoming.manual_home(self, toolhead=self.toolhead,
                                     endstops=endstops,
                                     pos=pos,
                                     speed=self.retract_speed,
