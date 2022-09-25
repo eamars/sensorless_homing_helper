@@ -85,7 +85,7 @@ class SensorLessHomingHelper(object):
             pos[0] -= self.minimum_homing_distance
             self.toolhead.manual_move(pos, self.retract_speed)
         else:
-            raise gcmd.respond_info('X is homed {} and away from maximum range'.format(kin_status['homed_axes'], pos[0]))
+            gcmd.respond_info('X is homed {} and away from maximum range'.format(kin_status['homed_axes'], pos[0]))
 
         with self.set_xy_motor_current(self.home_current):
             self.gcode.run_script_from_command('G28 X')
@@ -129,7 +129,7 @@ class SensorLessHomingHelper(object):
             pos[1] -= self.minimum_homing_distance
             self.toolhead.manual_move(pos, self.retract_speed)
         else:
-            raise gcmd.respond_info('Y is homed {} and away from maximum range'.format(kin_status['homed_axes'], pos[1]))
+            gcmd.respond_info('Y is homed {} and away from maximum range'.format(kin_status['homed_axes'], pos[1]))
 
         with self.set_xy_motor_current(self.home_current):
             self.gcode.run_script_from_command('G28 Y')
