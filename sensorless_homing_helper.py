@@ -100,7 +100,8 @@ class SensorLessHomingHelper(object):
     def cmd_HOME_Y(self, gcmd):
         # Check if Y axis is homed and its last known position
         curtime = self.printer.get_reactor().monotonic()
-        kin_status = self.toolhead.get_kinematics().get_status(curtime)
+        # kin_status = self.toolhead.get_kinematics().get_status(curtime)
+        kin_status = self.toolhead.get_status(curtime)
 
         pos = self.toolhead.get_position()
 
