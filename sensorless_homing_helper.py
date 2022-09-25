@@ -61,6 +61,7 @@ class SensorLessHomingHelper(object):
         pos = self.toolhead.get_position()
 
         if 'x' not in kin_status['homed_axes']:
+            gcmd.respond_info('X is not homed. Will perform the retract before home.')
             # Run the sensorless homing to the opposite direction
             with self.set_xy_motor_current(self.home_current):
                 move_pos = pos[:]
@@ -80,6 +81,7 @@ class SensorLessHomingHelper(object):
                                     check_triggered=False)
 
         elif kin_status['axis_maximum'][0] - pos[0] < self.minimum_homing_distance:
+            gcmd.respond_info('X is homed but too closed to the maximum range {}. Will perform the retract before home.'.format(pos[0]))
             pos[0] -= self.minimum_homing_distance
             self.toolhead.manual_move(pos, self.retract_speed)
 
@@ -101,6 +103,8 @@ class SensorLessHomingHelper(object):
         pos = self.toolhead.get_position()
 
         if 'y' not in kin_status['homed_axes']:
+            gcmd.respond_info('Y is not homed. Will perform the retract before home.')
+
             # Run the sensorless homing to the opposite direction
             with self.set_xy_motor_current(self.home_current):
                 move_pos = pos[:]
@@ -119,6 +123,7 @@ class SensorLessHomingHelper(object):
                                     triggered=True,
                                     check_triggered=False)
         elif kin_status['axis_maximum'][1] - pos[1] < self.minimum_homing_distance:
+            gcmd.respond_info('Y is homed but too closed to the maximum range {}. Will perform the retract before home.'.format(pos[1]))
             pos[1] -= self.minimum_homing_distance
             self.toolhead.manual_move(pos, self.retract_speed)
 
