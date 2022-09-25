@@ -54,10 +54,8 @@ class SensorLessHomingHelper(object):
                 'SET_TMC_CURRENT STEPPER={} CURRENT={}'.format(y_stepper_name, settings[self.tmc_stepper_y_name]['run_current']))
 
     def cmd_HOME_X(self, gcmd):
-        self.toolhead = self.printer.lookup_object('toolhead')
         # Check if X axis is homed and its last known position
         curtime = self.printer.get_reactor().monotonic()
-        # kin_status = self.toolhead.get_kinematics().get_status(curtime)
         kin_status = self.toolhead.get_status(curtime)
 
         pos = self.toolhead.get_position()
@@ -100,10 +98,8 @@ class SensorLessHomingHelper(object):
             self.toolhead.dwell(self.stallguard_reset_time)
 
     def cmd_HOME_Y(self, gcmd):
-        self.toolhead = self.printer.lookup_object('toolhead')
         # Check if Y axis is homed and its last known position
         curtime = self.printer.get_reactor().monotonic()
-        # kin_status = self.toolhead.get_kinematics().get_status(curtime)
         kin_status = self.toolhead.get_status(curtime)
 
         pos = self.toolhead.get_position()
