@@ -61,7 +61,7 @@ class SensorLessHomingHelper(object):
         pos = self.toolhead.get_position()
 
         if 'x' not in kin_status['homed_axes']:
-            gcmd.respond_info('X is not homed. Will perform the retract before home.')
+            gcmd.respond_info('X is not homed {}. Will perform the retract before home.'.format(kin_status['homed_axes']))
             # Run the sensorless homing to the opposite direction
             with self.set_xy_motor_current(self.home_current):
                 move_pos = pos[:]
@@ -84,6 +84,8 @@ class SensorLessHomingHelper(object):
             gcmd.respond_info('X is homed but too closed to the maximum range {}. Will perform the retract before home.'.format(pos[0]))
             pos[0] -= self.minimum_homing_distance
             self.toolhead.manual_move(pos, self.retract_speed)
+        else:
+            raise gcmd.respond_info('X is homed {} and away from maximum range'.format(kin_status['homed_axes'], pos[0]))
 
         with self.set_xy_motor_current(self.home_current):
             self.gcode.run_script_from_command('G28 X')
@@ -103,7 +105,7 @@ class SensorLessHomingHelper(object):
         pos = self.toolhead.get_position()
 
         if 'y' not in kin_status['homed_axes']:
-            gcmd.respond_info('Y is not homed. Will perform the retract before home.')
+            gcmd.respond_info('Y is not homed {}. Will perform the retract before home.'.format(kin_status['homed_axes']))
 
             # Run the sensorless homing to the opposite direction
             with self.set_xy_motor_current(self.home_current):
@@ -126,6 +128,8 @@ class SensorLessHomingHelper(object):
             gcmd.respond_info('Y is homed but too closed to the maximum range {}. Will perform the retract before home.'.format(pos[1]))
             pos[1] -= self.minimum_homing_distance
             self.toolhead.manual_move(pos, self.retract_speed)
+        else:
+            raise gcmd.respond_info('Y is homed {} and away from maximum range'.format(kin_status['homed_axes'], pos[1]))
 
         with self.set_xy_motor_current(self.home_current):
             self.gcode.run_script_from_command('G28 Y')
