@@ -20,6 +20,7 @@ class SensorLessHomingHelper(object):
         self.retract_distance = config.getfloat('retract_distance', 10)
         self.retract_speed = config.getfloat('retract_speed', 20)
         self.stallguard_reset_time = config.getfloat('stallguard_reset_time', 1)
+        self.use_homing_status = config.getboolean('use_homing_status', True)
 
         self.gcode.register_command('_HOME_X',
                                     self.cmd_HOME_X,
@@ -60,7 +61,7 @@ class SensorLessHomingHelper(object):
 
         pos = self.toolhead.get_position()
 
-        if 'x' not in kin_status['homed_axes']:
+        if self.use_homing_status and 'x' not in kin_status['homed_axes']:
             gcmd.respond_info('X is not homed {}. Will perform the retract before home.'.format(kin_status['homed_axes']))
             # Run the sensorless homing to the opposite direction
             with self.set_xy_motor_current(self.home_current):
@@ -104,7 +105,7 @@ class SensorLessHomingHelper(object):
 
         pos = self.toolhead.get_position()
 
-        if 'y' not in kin_status['homed_axes']:
+        if self.use_homing_status and 'y' not in kin_status['homed_axes']:
             gcmd.respond_info('Y is not homed {}. Will perform the retract before home.'.format(kin_status['homed_axes']))
 
             # Run the sensorless homing to the opposite direction
