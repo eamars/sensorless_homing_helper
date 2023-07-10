@@ -20,11 +20,11 @@ Klipper 无限位插件增强
 
 同时将以下内容复制到 moonraker.conf 以开启自动更新检查。
 
-    [update_manager client ercf_driver]
+    [update_manager client sensorless_homing_helper]
     type: git_repo
     primary_branch: main
-    path: /home/pi/ercf_driver
-    origin: https://github.com/eamars/ercf_driver.git
+    path: ~/sensorless_homing_helper
+    origin: https://github.com/eamars/sensorless_homing_helper.git
     install_script: install.sh
 
 # 示例配置
